@@ -1,0 +1,152 @@
+version: '3'
+services:
+  redis:
+    image: 'redis:5.0-alpine'
+    command: redis-server
+    volumes:
+      - './tmp/redis:/var/lib/redis/data'
+    networks:
+      net:
+        ipv4_address: 172.18.1.1
+  tapyrus:
+    build: ./core
+    networks:
+      net:
+        ipv4_address: 172.18.1.2
+    tty: true
+    volumes:
+      - ./tmp/tapyrus:/var/lib/tapyrus
+      - ./core/genesis.dat:/var/lib/tapyrus/genesis.dat
+      - ./core/tapyrus.conf:/var/lib/tapyrus/tapyrus.conf
+  signer1:
+    build: ./signer
+    command: [
+      "./start.sh",
+      "-p=03842d51608d08bee79587fb3b54ea68f5279e13fac7d72515a7205e6672858ca2",
+      "-p=03e568e3a5641ac21930b51f92fb6dd201fb46faae560b108cf3a96380da08dee1",
+      "-p=02a1c8965ed06987fa6d7e0f552db707065352283ab3c1471510b12a76a5905287",
+      "--privatekey=cQyv2tNYfsRbX8AeAVmeKqzdrv8f2P8LibtbYUPoEu7tJ2rn3NVW",
+      "--to_address=mzfmVfHKh4KtUUorQRYnHpHNDWNtKJ5iBf",
+      "-t","2",
+      "--rpchost=tapyrus",
+      "--rpcport=12381",
+      "--rpcuser=user",
+      "--rpcpass=pass",
+      "--redishost=redis",
+      "--log=trace",
+      "--skip-waiting-ibd"
+    ]
+    entrypoint: [
+      "prehook",
+      "dockerize -wait tcp://tapyrus:12381 -wait tcp://redis:6379 -timeout 60s",
+      "--"
+    ]
+    networks:
+      net:
+        ipv4_address: 172.18.1.3
+    volumes:
+      - ./signer/start.sh:/root/src/start.sh
+  signer2:
+    build: ./signer
+    command: [
+      "./start.sh",
+      "-p=03842d51608d08bee79587fb3b54ea68f5279e13fac7d72515a7205e6672858ca2",
+      "-p=03e568e3a5641ac21930b51f92fb6dd201fb46faae560b108cf3a96380da08dee1",
+      "-p=02a1c8965ed06987fa6d7e0f552db707065352283ab3c1471510b12a76a5905287",
+      "--privatekey=cQYYBMFS9dRR3Mt16gW4jixCqSiMhCwuDMHUBs6WeHMTxMnsq8Gh",
+      "--to_address=mpWsEZecvXeYEo2n9oPNGrbpHaY54KaUUL",
+      "-t","2",
+      "--rpchost=tapyrus",
+      "--rpcport=12381",
+      "--rpcuser=user",
+      "--rpcpass=pass",
+      "--redishost=redis",
+      "--log=trace",
+      "--skip-waiting-ibd"
+    ]
+    entrypoint: [
+      "prehook",
+      "dockerize -wait tcp://tapyrus:12381 -wait tcp://redis:6379 -timeout 60s",
+      "--"
+    ]
+    networks:
+      net:
+        ipv4_address: 172.18.1.4
+    volumes:
+      - ./signer/start.sh:/root/src/start.sh
+  signer3:
+    build: ./signer
+    command: [
+      "./start.sh",
+      "-p=03842d51608d08bee79587fb3b54ea68f5279e13fac7d72515a7205e6672858ca2",
+      "-p=03e568e3a5641ac21930b51f92fb6dd201fb46faae560b108cf3a96380da08dee1",
+      "-p=02a1c8965ed06987fa6d7e0f552db707065352283ab3c1471510b12a76a5905287",
+      "--privatekey=cTGpijFpMsDNA6qXXPh2cuUdGNbsjd5TtjTEp71TkzVvcizzsydm",
+      "--to_address=mpCaDciCh3oSPEgeQ5dvkN8q9gdQGC63nb",
+      "-t","2",
+      "--rpchost=tapyrus",
+      "--rpcport=12381",
+      "--rpcuser=user",
+      "--rpcpass=pass",
+      "--redishost=redis",
+      "--log=trace",
+      "--skip-waiting-ibd"
+    ]
+    entrypoint: [
+      "prehook",
+      "dockerize -wait tcp://tapyrus:12381 -wait tcp://redis:6379 -timeout 60s",
+      "--"
+    ]
+    networks:
+      net:
+        ipv4_address: 172.18.1.5
+    volumes:
+      - ./signer/start.sh:/root/src/start.sh
+  electrs:
+    build: ./electrs
+    command: [
+      "scripts/run.sh", 
+      "-vvvv", 
+      "--timestamp", 
+      "--db-dir", "/root/db", 
+      "--electrum-rpc-addr", "0.0.0.0:50001", 
+      "--network", "regtest", 
+      "--daemon-rpc-addr", "tapyrus:12381",
+    ]
+    networks:
+      net:
+        ipv4_address: 172.18.1.6
+    tty: true
+    volumes:
+      - ./electrs/run.sh:/root/src/scripts/run.sh
+      - ./tmp/electrs/log:/tmp/
+      - ./tmp/electrs/db:/root/db
+      - ./tmp/tapyrus:/root/.bitcoin
+      - ./electrs/.cookie:/root/.bitcoin/regtest/.cookie
+  client:
+    build: ./client
+    entrypoint: ["tail","-f","/dev/null"]
+    networks:
+      net:
+        ipv4_address: 172.18.1.7
+networks:
+  net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/16
+volumes:
+  redis:
+    driver: local
+  tapyrus:
+    driver: local
+  signer1:
+    driver: local
+  signer2:
+    driver: local
+  signer3:
+    driver: local
+  electrs:
+    driver: local
+  client:
+    driver: local

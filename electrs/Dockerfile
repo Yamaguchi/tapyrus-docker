@@ -1,0 +1,23 @@
+FROM rust:latest
+
+ENV PACKAGES "clang cmake libsnappy-dev git"
+
+RUN apt-get update \
+  && apt-get install -y $PACKAGES
+
+USER root
+WORKDIR /root/src
+
+RUN git clone --depth 1 https://github.com/chaintope/electrs-tapyrus.git /root/src
+
+RUN cd /root/src \
+  && cargo build --release \
+  && cargo install --path .
+
+# Electrum RPC
+EXPOSE 50001
+
+# Prometheus monitoring
+EXPOSE 4224
+
+STOPSIGNAL SIGINT
