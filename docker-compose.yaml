@@ -49,6 +49,7 @@ services:
         ipv4_address: 172.18.1.3
     volumes:
       - ./tmp/signer1:/tmp/log
+      - ../tapyrus-signer:/root/src
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
@@ -83,6 +84,7 @@ services:
         ipv4_address: 172.18.1.4
     volumes:
       - ./tmp/signer2:/tmp/log
+      - ../tapyrus-signer:/root/src
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
@@ -118,6 +120,7 @@ services:
         ipv4_address: 172.18.1.5
     volumes:
       - ./tmp/signer3:/tmp/log
+      - ../tapyrus-signer:/root/src
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
@@ -144,6 +147,9 @@ services:
         ipv4_address: 172.18.1.6
     tty: true
     volumes:
+      - ../rust-tapyrus:/root/rust-tapyrus
+      - ../openassets-tapyrus:/root/openassets-tapyrus
+      - ../electrs-tapyrus:/root/src
       - ./electrs/run.sh:/tmp/scripts/run.sh
       - ./tmp/electrs/log:/tmp/log
       - ./tmp/electrs/db:/root/db
