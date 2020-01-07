@@ -9,7 +9,7 @@ RUN apt-get update \
 USER root
 WORKDIR /root/src
 
-RUN git clone --depth 1 https://github.com/chaintope/tapyrus-signer.git /root/src
+RUN git clone --depth 1 https://github.com/chaintope/tapyrus-signer.git -b v0.3.0 /root/src
 
 RUN cd /root/src \
   && cargo build --release \
