@@ -136,6 +136,8 @@ services:
         "regtest",
         "--daemon-rpc-addr",
         "tapyrus:12381",
+        "--txid-limit",
+        "0",
       ]
     networks:
       net:
