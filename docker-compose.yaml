@@ -125,7 +125,7 @@ services:
     build: ./electrs
     command:
       [
-        "scripts/run.sh",
+        "/tmp/scripts/run.sh",
         "-vvvv",
         "--timestamp",
         "--db-dir",
@@ -144,8 +144,8 @@ services:
         ipv4_address: 172.18.1.6
     tty: true
     volumes:
-      - ./electrs/run.sh:/root/src/scripts/run.sh
-      - ./tmp/electrs/log:/tmp/
+      - ./electrs/run.sh:/tmp/scripts/run.sh
+      - ./tmp/electrs/log:/tmp/log
       - ./tmp/electrs/db:/root/db
       - ./tmp/tapyrus:/root/.bitcoin
       - ./electrs/.cookie:/root/.bitcoin/regtest/.cookie
