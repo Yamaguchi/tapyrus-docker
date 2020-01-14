@@ -1,4 +1,4 @@
-FROM rust:latest
+FROM rust:1.34.0
 
 ENV PACKAGES "clang cmake libsnappy-dev git"
 
