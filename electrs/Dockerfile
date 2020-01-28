@@ -8,7 +8,7 @@ RUN apt-get update \
 USER root
 WORKDIR /root/src
 
-RUN git clone --depth 1 https://github.com/chaintope/electrs-tapyrus.git /root/src
+RUN git clone --depth 1 https://github.com/chaintope/electrs-tapyrus.git -b v0.1.0 /root/src
 
 RUN cd /root/src \
   && cargo build --release \
