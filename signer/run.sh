@@ -6,6 +6,7 @@ DELAY=5
 CARGO="cargo"
 LOG=/tmp/log/signer.log
 
+touch "$LOG"
 tail -v -n0 -F "$LOG" &
 
 export RUST_BACKTRACE=1
