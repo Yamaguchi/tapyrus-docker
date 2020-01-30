@@ -10,7 +10,11 @@ cd tapyrus-docker
 
 docker-compose build
 
-docker-compose up -d
+docker-compose up -d redis tapyrus
+
+(wait for a minites, during initial block download(IBD) on tapyrus core)
+
+docker-compose up -d signer1 signer2 signer3 electrs
 
 (wait until 100 blocks generated...)
 ```
