@@ -10,22 +10,24 @@ cd tapyrus-docker
 
 docker-compose build
 
-docker-compose up -d redis tapyrus
+docker-compose up -d redis tapyrus1 tapyrus2 tapyrus3
 
 (wait for a minites, during initial block download(IBD) on tapyrus core)
 
-docker-compose up -d signer1 signer2 signer3 electrs
+docker-compose up -d signer1 signer2 signer3 electrs1
 
 (wait until 100 blocks generated...)
 ```
 
 Then instances below will wake up.
-- Tapyrus Core: 1
+- Tapyrus Core: 3
 - Tapyrus Signer: 3
 - Redis: 1
 - Electrs for Tapyrus: 1
 - RPC Client for debug(only bitcoinrb installed): 1
  
+![tapyrus docker](tapyrus-docker.png "tapyrus docker")
+
 # Compatible versions
 
 |Core|Signer|Electrs|
@@ -36,7 +38,6 @@ Then instances below will wake up.
 # TODO 
 
 - Write how to generate private keys and genesis block in README.
-- Multiple core.
 - docker-compose.yml for running as mainnet or testnet.
 - Include tapyrus-seeder.
 
