@@ -1,4 +1,4 @@
-FROM ruby:latest
+FROM ruby:2.6.5
 
 ENV MAKEJOBS -j3
 ENV LC_ALL C.UTF-8

@@ -8,16 +8,36 @@ services:
     networks:
       net:
         ipv4_address: 172.18.1.1
-  tapyrus:
+  tapyrus1:
     build: ./core
     networks:
       net:
-        ipv4_address: 172.18.1.2
+        ipv4_address: 172.18.2.1
     tty: true
     volumes:
-      - ./tmp/tapyrus:/var/lib/tapyrus
+      - ./tmp/tapyrus1:/var/lib/tapyrus
       - ./core/genesis.dat:/var/lib/tapyrus/genesis.dat
-      - ./core/tapyrus.conf:/var/lib/tapyrus/tapyrus.conf
+      - ./core/tapyrus1.conf:/var/lib/tapyrus/tapyrus.conf
+  tapyrus2:
+    build: ./core
+    networks:
+      net:
+        ipv4_address: 172.18.2.2
+    tty: true
+    volumes:
+      - ./tmp/tapyrus2:/var/lib/tapyrus
+      - ./core/genesis.dat:/var/lib/tapyrus/genesis.dat
+      - ./core/tapyrus2.conf:/var/lib/tapyrus/tapyrus.conf
+  tapyrus3:
+    build: ./core
+    networks:
+      net:
+        ipv4_address: 172.18.2.3
+    tty: true
+    volumes:
+      - ./tmp/tapyrus3:/var/lib/tapyrus
+      - ./core/genesis.dat:/var/lib/tapyrus/genesis.dat
+      - ./core/tapyrus3.conf:/var/lib/tapyrus/tapyrus.conf
   signer1:
     build: ./signer
     command:
@@ -30,7 +50,7 @@ services:
         "--to_address=mzfmVfHKh4KtUUorQRYnHpHNDWNtKJ5iBf",
         "-t",
         "2",
-        "--rpchost=tapyrus",
+        "--rpchost=tapyrus1",
         "--rpcport=12381",
         "--rpcuser=user",
         "--rpcpass=pass",
@@ -41,12 +61,12 @@ services:
     entrypoint:
       [
         "prehook",
-        "dockerize -wait tcp://tapyrus:12381 -wait tcp://redis:6379 -timeout 60s",
+        "dockerize -wait tcp://tapyrus1:12381 -wait tcp://redis:6379 -timeout 60s",
         "--",
       ]
     networks:
       net:
-        ipv4_address: 172.18.1.3
+        ipv4_address: 172.18.3.1
     volumes:
       - ./tmp/signer1:/tmp/log
       - type: bind
@@ -64,7 +84,7 @@ services:
         "--to_address=mpWsEZecvXeYEo2n9oPNGrbpHaY54KaUUL",
         "-t",
         "2",
-        "--rpchost=tapyrus",
+        "--rpchost=tapyrus2",
         "--rpcport=12381",
         "--rpcuser=user",
         "--rpcpass=pass",
@@ -75,12 +95,12 @@ services:
     entrypoint:
       [
         "prehook",
-        "dockerize -wait tcp://tapyrus:12381 -wait tcp://redis:6379 -timeout 60s",
+        "dockerize -wait tcp://tapyrus2:12381 -wait tcp://redis:6379 -timeout 60s",
         "--",
       ]
     networks:
       net:
-        ipv4_address: 172.18.1.4
+        ipv4_address: 172.18.3.2
     volumes:
       - ./tmp/signer2:/tmp/log
       - type: bind
@@ -99,7 +119,7 @@ services:
         "--to_address=mpCaDciCh3oSPEgeQ5dvkN8q9gdQGC63nb",
         "-t",
         "2",
-        "--rpchost=tapyrus",
+        "--rpchost=tapyrus3",
         "--rpcport=12381",
         "--rpcuser=user",
         "--rpcpass=pass",
@@ -110,18 +130,18 @@ services:
     entrypoint:
       [
         "prehook",
-        "dockerize -wait tcp://tapyrus:12381 -wait tcp://redis:6379 -timeout 60s",
+        "dockerize -wait tcp://tapyrus3:12381 -wait tcp://redis:6379 -timeout 60s",
         "--",
       ]
     networks:
       net:
-        ipv4_address: 172.18.1.5
+        ipv4_address: 172.18.3.3
     volumes:
       - ./tmp/signer3:/tmp/log
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
-  electrs:
+  electrs1:
     build: ./electrs
     command:
       [
@@ -135,26 +155,26 @@ services:
         "--network",
         "regtest",
         "--daemon-rpc-addr",
-        "tapyrus:12381",
+        "tapyrus1:12381",
         "--txid-limit",
         "0",
       ]
     networks:
       net:
-        ipv4_address: 172.18.1.6
+        ipv4_address: 172.18.4.1
     tty: true
     volumes:
       - ./electrs/run.sh:/tmp/scripts/run.sh
-      - ./tmp/electrs/log:/tmp/log
-      - ./tmp/electrs/db:/root/db
-      - ./tmp/tapyrus:/root/.bitcoin
+      - ./tmp/electrs1/log:/tmp/log
+      - ./tmp/electrs1/db:/root/db
+      - ./tmp/tapyrus1:/root/.bitcoin
       - ./electrs/.cookie:/root/.bitcoin/regtest/.cookie
   client:
     build: ./client
     entrypoint: ["tail", "-f", "/dev/null"]
     networks:
       net:
-        ipv4_address: 172.18.1.7
+        ipv4_address: 172.18.5.1
 networks:
   net:
     ipam:
@@ -164,7 +184,11 @@ networks:
 volumes:
   redis:
     driver: local
-  tapyrus:
+  tapyrus1:
+    driver: local
+  tapyrus2:
+    driver: local
+  tapyrus3:
     driver: local
   signer1:
     driver: local
@@ -172,7 +196,7 @@ volumes:
     driver: local
   signer3:
     driver: local
-  electrs:
+  electrs1:
     driver: local
   client:
     driver: local
