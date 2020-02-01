@@ -145,34 +145,7 @@ overwrite core/genesis.dat? (y/n [n]) y
 
 ```
 
-7. Replace signblockpubkeys with (10) aggregated public key in tapyrus1.conf/tapyrus2.conf/tapyrus3.conf
-
-```
-
-> vi core/tapyrus1.conf
-
-== tapyrus1.conf
-regtest=1
-txindex=1
-server=1
-rest=1
-rpcuser=user
-rpcpassword=pass
-rpcbind=0.0.0.0
-rpcallowip=172.18.0.0/16
-
-# (10) aggregated public key
-# signblockpubkeys=025700236c2890233592fcef262f4520d22af9160e3d9705855140eb2aa06c35d3
-signblockpubkeys=02dfe0ead632b5949eadc335eba30b66039730ac4e501b62839500c630b63a4bbc
-
-[regtest]
-rpcport=12381
-addnode=172.18.2.2
-addnode=172.18.2.3
-
-```
-
-8. Update docker-compose.yml to replace signer's configuration using private keys, public keys and addresses generated at Step 3.
+7. Update docker-compose.yml to replace signer's configuration using private keys, public keys and addresses generated at Step 3.
 
 ```
 signer1:
@@ -198,7 +171,7 @@ signer1:
       ...
 ```
 
-9. Finally, remove all files in tmp directory and restart all container.
+8. Finally, remove all files in tmp directory and restart all container.
 
 # TODO
 
