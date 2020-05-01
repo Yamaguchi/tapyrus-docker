@@ -9,11 +9,11 @@ RUN apt-get update \
 USER root
 WORKDIR /root/src
 
-RUN git clone --depth 1 https://github.com/chaintope/tapyrus-signer.git -b v0.3.0 /root/src
+RUN git clone --depth 1 https://github.com/chaintope/tapyrus-signer.git -b v0.4.0 /root/src
 
 RUN cd /root/src \
-  && cargo build --release \
-  && cargo install --path .
+  && cargo build --release
+  # && cargo install --path .
 
 ENV ENTRYKIT_VERSION 0.4.0
 RUN wget https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz \

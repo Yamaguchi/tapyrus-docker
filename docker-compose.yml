@@ -16,7 +16,7 @@ services:
     tty: true
     volumes:
       - ./tmp/tapyrus1:/var/lib/tapyrus
-      - ./core/genesis.dat:/var/lib/tapyrus/genesis.dat
+      - ./core/genesis.1905960821:/var/lib/tapyrus/genesis.1905960821
       - ./core/tapyrus1.conf:/var/lib/tapyrus/tapyrus.conf
   tapyrus2:
     build: ./core
@@ -26,7 +26,7 @@ services:
     tty: true
     volumes:
       - ./tmp/tapyrus2:/var/lib/tapyrus
-      - ./core/genesis.dat:/var/lib/tapyrus/genesis.dat
+      - ./core/genesis.1905960821:/var/lib/tapyrus/genesis.1905960821
       - ./core/tapyrus2.conf:/var/lib/tapyrus/tapyrus.conf
   tapyrus3:
     build: ./core
@@ -36,26 +36,25 @@ services:
     tty: true
     volumes:
       - ./tmp/tapyrus3:/var/lib/tapyrus
-      - ./core/genesis.dat:/var/lib/tapyrus/genesis.dat
+      - ./core/genesis.1905960821:/var/lib/tapyrus/genesis.1905960821
       - ./core/tapyrus3.conf:/var/lib/tapyrus/tapyrus.conf
+  tapyrus4:
+    build: ./core
+    networks:
+      net:
+        ipv4_address: 172.18.2.4
+    tty: true
+    volumes:
+      - ./tmp/tapyrus4:/var/lib/tapyrus
+      - ./core/genesis.1905960821:/var/lib/tapyrus/genesis.1905960821
+      - ./core/tapyrus4.conf:/var/lib/tapyrus/tapyrus.conf
   signer1:
     build: ./signer
     command:
       [
         "/tmp/run.sh",
-        "-p=03842d51608d08bee79587fb3b54ea68f5279e13fac7d72515a7205e6672858ca2",
-        "-p=03e568e3a5641ac21930b51f92fb6dd201fb46faae560b108cf3a96380da08dee1",
-        "-p=02a1c8965ed06987fa6d7e0f552db707065352283ab3c1471510b12a76a5905287",
-        "--privatekey=cQyv2tNYfsRbX8AeAVmeKqzdrv8f2P8LibtbYUPoEu7tJ2rn3NVW",
-        "--to_address=mzfmVfHKh4KtUUorQRYnHpHNDWNtKJ5iBf",
-        "-t",
-        "2",
-        "--rpchost=tapyrus1",
-        "--rpcport=12381",
-        "--rpcuser=user",
-        "--rpcpass=pass",
-        "--redishost=redis",
-        "--log=debug",
+        "-c",
+        "/tmp/signer1.toml",
         "--skip-waiting-ibd",
       ]
     entrypoint:
@@ -68,28 +67,22 @@ services:
       net:
         ipv4_address: 172.18.3.1
     volumes:
-      - ./tmp/signer1:/tmp/log
+      - ./tmp/signer1:/tmp
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
+      - type: bind
+        source: ./signer/signer1.toml
+        target: /tmp/signer1.toml
+      - type: bind
+        source: ./signer/federations1.toml
+        target: /tmp/federations1.toml
   signer2:
     build: ./signer
     command:
       [
         "/tmp/run.sh",
-        "-p=03842d51608d08bee79587fb3b54ea68f5279e13fac7d72515a7205e6672858ca2",
-        "-p=03e568e3a5641ac21930b51f92fb6dd201fb46faae560b108cf3a96380da08dee1",
-        "-p=02a1c8965ed06987fa6d7e0f552db707065352283ab3c1471510b12a76a5905287",
-        "--privatekey=cQYYBMFS9dRR3Mt16gW4jixCqSiMhCwuDMHUBs6WeHMTxMnsq8Gh",
-        "--to_address=mpWsEZecvXeYEo2n9oPNGrbpHaY54KaUUL",
-        "-t",
-        "2",
-        "--rpchost=tapyrus2",
-        "--rpcport=12381",
-        "--rpcuser=user",
-        "--rpcpass=pass",
-        "--redishost=redis",
-        "--log=debug",
+        "-c=/tmp/signer2.toml",
         "--skip-waiting-ibd",
       ]
     entrypoint:
@@ -102,29 +95,22 @@ services:
       net:
         ipv4_address: 172.18.3.2
     volumes:
-      - ./tmp/signer2:/tmp/log
+      - ./tmp/signer2:/tmp
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
-
+      - type: bind
+        source: ./signer/signer2.toml
+        target: /tmp/signer2.toml
+      - type: bind
+        source: ./signer/federations2.toml
+        target: /tmp/federations2.toml
   signer3:
     build: ./signer
     command:
       [
         "/tmp/run.sh",
-        "-p=03842d51608d08bee79587fb3b54ea68f5279e13fac7d72515a7205e6672858ca2",
-        "-p=03e568e3a5641ac21930b51f92fb6dd201fb46faae560b108cf3a96380da08dee1",
-        "-p=02a1c8965ed06987fa6d7e0f552db707065352283ab3c1471510b12a76a5905287",
-        "--privatekey=cTGpijFpMsDNA6qXXPh2cuUdGNbsjd5TtjTEp71TkzVvcizzsydm",
-        "--to_address=mpCaDciCh3oSPEgeQ5dvkN8q9gdQGC63nb",
-        "-t",
-        "2",
-        "--rpchost=tapyrus3",
-        "--rpcport=12381",
-        "--rpcuser=user",
-        "--rpcpass=pass",
-        "--redishost=redis",
-        "--log=debug",
+        "-c=/tmp/signer3.toml",
         "--skip-waiting-ibd",
       ]
     entrypoint:
@@ -137,10 +123,44 @@ services:
       net:
         ipv4_address: 172.18.3.3
     volumes:
-      - ./tmp/signer3:/tmp/log
+      - ./tmp/signer3:/tmp/
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
+      - type: bind
+        source: ./signer/signer3.toml
+        target: /tmp/signer3.toml
+      - type: bind
+        source: ./signer/federations3.toml
+        target: /tmp/federations3.toml
+  signer4:
+    build: ./signer
+    command:
+      [
+        "/tmp/run.sh",
+        "-c=/tmp/signer4.toml",
+        "--skip-waiting-ibd",
+      ]
+    entrypoint:
+      [
+        "prehook",
+        "dockerize -wait tcp://tapyrus3:12381 -wait tcp://redis:6379 -timeout 60s",
+        "--",
+      ]
+    networks:
+      net:
+        ipv4_address: 172.18.3.4
+    volumes:
+      - ./tmp/signer4:/tmp/
+      - type: bind
+        source: ./signer/run.sh
+        target: /tmp/run.sh
+      - type: bind
+        source: ./signer/signer4.toml
+        target: /tmp/signer4.toml
+      - type: bind
+        source: ./signer/federations4.toml
+        target: /tmp/federations4.toml
   electrs1:
     build: ./electrs
     command:
@@ -150,10 +170,14 @@ services:
         "--timestamp",
         "--db-dir",
         "/root/db",
+        "--daemon-dir",
+        "/root/.bitcoin/prod-1905960821",
+        "--network",
+        "prod",
+        "--network-id",
+        "1905960821",
         "--electrum-rpc-addr",
         "0.0.0.0:50001",
-        "--network",
-        "regtest",
         "--daemon-rpc-addr",
         "tapyrus1:12381",
         "--txid-limit",
@@ -168,7 +192,7 @@ services:
       - ./tmp/electrs1/log:/tmp/log
       - ./tmp/electrs1/db:/root/db
       - ./tmp/tapyrus1:/root/.bitcoin
-      - ./electrs/.cookie:/root/.bitcoin/regtest/.cookie
+      - ./electrs/.cookie:/root/.bitcoin/prod-1905960821/.cookie
   client:
     build: ./client
     entrypoint: ["tail", "-f", "/dev/null"]
@@ -190,11 +214,15 @@ volumes:
     driver: local
   tapyrus3:
     driver: local
+  tapyrus4:
+    driver: local
   signer1:
     driver: local
   signer2:
     driver: local
   signer3:
+    driver: local
+  signer4:
     driver: local
   electrs1:
     driver: local

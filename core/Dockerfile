@@ -11,7 +11,7 @@ WORKDIR /root
 RUN apt-get update \
   && apt-get install --no-install-recommends --no-upgrade -qq $PACKAGES $BUILD_PACKAGES
 
-RUN git clone --depth 1 https://github.com/chaintope/tapyrus-core.git -b v0.3.0 /root/src
+RUN git clone --depth 1 https://github.com/chaintope/tapyrus-core.git -b v0.4.0 /root/src
 
 RUN cd /root/src \
   && ./autogen.sh \

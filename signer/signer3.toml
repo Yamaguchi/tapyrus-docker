@@ -1,0 +1,20 @@
+[signer]
+to-address = "1FuQyfengAS3AzkfFdNbRqGqc5UAedjhJe"
+public-key = "023cb7d6326e33332d04d026be1a04cdaf084703d8dc75322182d8fb314a03a877"
+federations-file = "/tmp/federations3.toml"
+
+[rpc]
+rpc-endpoint-host = "tapyrus3"
+rpc-endpoint-port = 12381
+rpc-endpoint-user = "user"
+rpc-endpoint-pass = "pass"
+
+[redis]
+redis-host = "redis"
+redis-port =  6379
+
+[general]
+round-duration = 20
+log-quiet = false
+log-level = "trace"
+daemon = false
