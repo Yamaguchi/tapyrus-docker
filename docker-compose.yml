@@ -168,10 +168,10 @@ services:
         "/tmp/scripts/run.sh",
         "-vvvv",
         "--timestamp",
+        "--daemon-dir",
+        "/root/.tapyrus/prod-1905960821",
         "--db-dir",
         "/root/db",
-        "--daemon-dir",
-        "/root/.bitcoin/prod-1905960821",
         "--network",
         "prod",
         "--network-id",
@@ -191,8 +191,8 @@ services:
       - ./electrs/run.sh:/tmp/scripts/run.sh
       - ./tmp/electrs1/log:/tmp/log
       - ./tmp/electrs1/db:/root/db
-      - ./tmp/tapyrus1:/root/.bitcoin
-      - ./electrs/.cookie:/root/.bitcoin/prod-1905960821/.cookie
+      - ./tmp/tapyrus1:/root/.tapyrus
+      - ./electrs/.cookie:/root/.tapyrus/prod-1905960821/.cookie
   client:
     build: ./client
     entrypoint: ["tail", "-f", "/dev/null"]
