@@ -144,7 +144,7 @@ services:
     entrypoint:
       [
         "prehook",
-        "dockerize -wait tcp://tapyrus3:12381 -wait tcp://redis:6379 -timeout 60s",
+        "dockerize -wait tcp://tapyrus4:12381 -wait tcp://redis:6379 -timeout 60s",
         "--",
       ]
     networks:
