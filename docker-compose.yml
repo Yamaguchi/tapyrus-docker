@@ -67,7 +67,7 @@ services:
       net:
         ipv4_address: 172.18.3.1
     volumes:
-      - ./tmp/signer1:/tmp
+      - ./tmp/signer1/log:/tmp/log
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
@@ -95,7 +95,7 @@ services:
       net:
         ipv4_address: 172.18.3.2
     volumes:
-      - ./tmp/signer2:/tmp
+      - ./tmp/signer2/log:/tmp/log
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
@@ -123,7 +123,7 @@ services:
       net:
         ipv4_address: 172.18.3.3
     volumes:
-      - ./tmp/signer3:/tmp/
+      - ./tmp/signer3/log:/tmp/log
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
@@ -151,7 +151,7 @@ services:
       net:
         ipv4_address: 172.18.3.4
     volumes:
-      - ./tmp/signer4:/tmp/
+      - ./tmp/signer4/log:/tmp/log
       - type: bind
         source: ./signer/run.sh
         target: /tmp/run.sh
